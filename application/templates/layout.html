@@ -15,7 +15,8 @@
       <img src="static/images/uta-logo-200.png" />
     </div>
     <div class="container">
-      {% include "includes/nav.html" %} {% block content %} {% endblock %}
+      {% include "includes/nav.html" %}
+      <div>{% block content %} {% endblock %}</div>
     </div>
 
     {% include "includes/footer.html" %}
