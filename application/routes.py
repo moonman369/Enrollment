@@ -14,6 +14,7 @@ def login():
     return render_template('login.html', login=True)
 
 @app.route('/courses')
+@app.route('/courses/')
 @app.route('/courses/<string:term>')
 def courses(term=f'{datetime.date.today().year}'):
     return render_template('courses.html', courseData=courseData, courses=True, term=term)
