@@ -1,6 +1,7 @@
 from application import app, db
 from flask import render_template, request, json, Response
 from application.models import User, Course, Enrollment
+from application.forms import LoginForm, RegisterForm
 import datetime
 
 
@@ -11,9 +12,10 @@ courseData = [{"courseID":"1111","title":"PHP 101","description":"Intro to PHP",
 def index():
     return render_template('index.html', index=True)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html', login=True)
+    form = LoginForm()
+    return render_template('login.html', title='Login', login=True, form=form)
 
 @app.route('/courses')
 @app.route('/courses/')
