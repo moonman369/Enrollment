@@ -12,6 +12,7 @@ import datetime
 def index():
     return render_template('index.html', index=True)
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -29,13 +30,15 @@ def login():
             
     return render_template('login.html', title='Login', login=True, form=form)
 
+
 @app.route('/courses')
 @app.route('/courses/')
 @app.route('/courses/<string:term>')
 def courses(term=f'{datetime.date.today().year}'):
-    courseData = Courses.objects.all()
+    courseData = Courses.objects.order_by('+courseID')
     print(courseData)
     return render_template('courses.html', courseData=courseData, courses=True, term=term)
+
 
 @app.route('/register', methods=['POST','GET'])
 def register():
@@ -57,6 +60,7 @@ def register():
 
     return render_template('register.html', register=True, form=form, title='Register')
 
+
 @app.route('/enrollment', methods=['GET', 'POST'])
 def enrollment():
     id = request.form.get('courseID')
@@ -64,16 +68,18 @@ def enrollment():
     term = request.form.get('term')
     return render_template('enrollment.html', enrollment=True, data={"id":id, "title":title, "term":term})
 
+
 @app.route('/api')
 @app.route('/api/<idx>')
 def api(idx=None):
-    courseData = Courses.objects.all()
+    courseData = Courses.objects.order_by('+courseID')
     if idx is None:
         jdata = courseData
     else:
         jdata = courseData[int(idx)]
 
     return Response(json.dumps(jdata), mimetype='application/json')
+
 
 @app.route('/user')
 def user():
