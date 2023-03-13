@@ -1,5 +1,5 @@
 from application import app, db
-from flask import render_template, request, json, Response, flash, redirect
+from flask import render_template, request, json, Response, flash, redirect, url_for
 from application.models import User, Course, Enrollment
 from application.forms import LoginForm, RegisterForm
 import datetime
@@ -21,7 +21,7 @@ def login():
         password = form.password.data
 
         user = User.objects(email=email).first()
-        if user and password == user.password:
+        if user and user.get_password(password):
             flash(f'You are successfully logged in as {user.first_name}!', 'success')
             return redirect('/index')
         else:
@@ -35,9 +35,25 @@ def login():
 def courses(term=f'{datetime.date.today().year}'):
     return render_template('courses.html', courseData=courseData, courses=True, term=term)
 
-@app.route('/register')
+@app.route('/register', methods=['POST','GET'])
 def register():
-    return render_template('register.html', register=True)
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user_id = User.objects.count()
+        user_id += 1
+
+        email = form.email.data
+        password = form.password.data
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+
+        user = User(user_id=user_id, email=email, first_name=first_name, last_name=last_name)
+        user.set_password(password)
+        user.save()
+        flash(f'You are successfully registered as {user.first_name}!', 'success')
+        return redirect(url_for('index'))
+
+    return render_template('register.html', register=True, form=form, title='Register')
 
 @app.route('/enrollment', methods=['GET', 'POST'])
 def enrollment():

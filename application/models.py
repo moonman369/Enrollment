@@ -12,7 +12,7 @@ class User(db.Document):
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
-    def getpassword(self, password):
+    def get_password(self, password):
         return check_password_hash(self.password, password)
 
 
