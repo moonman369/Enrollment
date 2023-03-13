@@ -9,16 +9,21 @@
 
       <p>
         {{ form.email.label }} <br />
-        {{ form.email(size=35) }}
+        {{ form.email(size=35) }} {% for error in form.email.errors %}
+        <span class="error-message">{{ error }}</span>
+        {% endfor %}
       </p>
 
       <p>
         {{ form.password.label }} <br />
-        {{ form.password(size=20) }}
+        {{ form.password(size=20) }} {% for error in form.password.errors %}
+        <span class="error-message">{{ error }}</span>
+        {% endfor %}
       </p>
 
       <p>{{ form.submit(size=35) }}</p>
     </form>
   </div>
 </div>
+<br /><br />
 {% endblock %}
