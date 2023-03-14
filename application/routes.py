@@ -63,10 +63,58 @@ def register():
 
 @app.route('/enrollment', methods=['GET', 'POST'])
 def enrollment():
-    id = request.form.get('courseID')
-    title = request.form.get('title')
-    term = request.form.get('term')
-    return render_template('enrollment.html', enrollment=True, data={"id":id, "title":title, "term":term})
+    courseID = request.form.get('courseID')
+    courseTitle = request.form.get('title')
+    user_id = 2
+
+    if courseID:
+        if Enrollment.objects(user_id=user_id, courseID=courseID):
+            flash(f'You are already registered to {courseTitle}.', 'danger')
+            return redirect(url_for('courses'))
+        else:
+            Enrollment(user_id=user_id, courseID=courseID).save()
+            flash(f'You are successfully enrolled to {courseTitle}!', 'success')
+
+    classes = list(User.objects.aggregate(*[
+    {
+        '$lookup': {
+            'from': 'enrollment', 
+            'localField': 'user_id', 
+            'foreignField': 'user_id', 
+            'as': 'r1'
+        }
+    }, {
+        '$unwind': {
+            'path': '$r1', 
+            'includeArrayIndex': 'r1_id', 
+            'preserveNullAndEmptyArrays': False
+        }
+    }, {
+        '$lookup': {
+            'from': 'courses', 
+            'localField': 'r1.courseID', 
+            'foreignField': 'courseID', 
+            'as': 'r2'
+        }
+    }, {
+        '$unwind': {
+            'path': '$r2', 
+            'preserveNullAndEmptyArrays': False
+        }
+    }, {
+        '$match': {
+            'user_id': user_id
+        }
+    }, {
+        '$sort': {
+            'courseID': 1
+        }
+    }
+]))
+
+    # term = request.form.get('term')
+
+    return render_template('enrollment.html', enrollment=True, title='Enrollment', classes=classes)
 
 
 @app.route('/api')
