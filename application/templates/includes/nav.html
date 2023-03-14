@@ -15,6 +15,7 @@
           >Classes</a
         >
       </li>
+      {% if not session['username'] %}
       <li class="nav-item">
         <a
           href="{{ url_for('register') }}"
@@ -22,6 +23,7 @@
           >Register</a
         >
       </li>
+      {% endif %}
       <li class="nav-item">
         <a
           href="{{ url_for('enrollment') }}"
@@ -29,6 +31,7 @@
           >Enrollment</a
         >
       </li>
+      {% if not session['username'] %}
       <li class="nav-item">
         <a
           href="{{ url_for('login') }}"
@@ -36,6 +39,11 @@
           >Login</a
         >
       </li>
+      {% else %}
+      <li class="nav-item">
+        <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+      </li>
+      {% endif %}
     </ul>
   </nav>
   <hr style="clear: both" />

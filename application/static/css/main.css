@@ -13,6 +13,8 @@ body {
   height: 100%;
   position: relative;
   margin: 0px;
+  background-color: #292828;
+  color: #becab4;
 }
 
 header {
@@ -26,11 +28,13 @@ li {
 
 a {
   text-decoration: none;
-  color: blue;
+  color: rgb(92, 156, 209);
+  transition: all 450ms;
 }
 
 a:hover {
-  color: red;
+  color: rgb(199, 230, 225);
+  /* font-weight: bold; */
 }
 
 hr {
@@ -38,7 +42,7 @@ hr {
   height: 4px;
   margin-left: auto;
   margin-right: auto;
-  background-color: darkblue;
+  background-color: rgb(92, 156, 209);
   border: 0 none;
 }
 
@@ -99,4 +103,16 @@ footer {
 }
 .btn-submit:hover {
   opacity: 1;
+}
+
+.error-message {
+  color: rgb(219, 85, 85);
+}
+
+.user {
+  float: right;
+  position: absolute;
+  font-size: 25px;
+  right: 5em;
+  top: 3.75em;
 }
