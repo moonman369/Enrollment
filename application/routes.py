@@ -1,6 +1,7 @@
 from application import app, db, api
 from flask import render_template, request, json, Response, flash, redirect, url_for, session, jsonify
 from application.models import User, Courses, Enrollment
+from application.course_list import course_list
 from application.forms import LoginForm, RegisterForm
 from flask_restx import Resource
 import datetime
@@ -127,42 +128,42 @@ def enrollment():
             Enrollment(user_id=user_id, courseID=courseID).save()
             flash(f'You are successfully enrolled to {courseTitle}!', 'success')
 
-    classes = list(User.objects.aggregate(*[
-    {
-        '$lookup': {
-            'from': 'enrollment', 
-            'localField': 'user_id', 
-            'foreignField': 'user_id', 
-            'as': 'r1'
-        }
-    }, {
-        '$unwind': {
-            'path': '$r1', 
-            'includeArrayIndex': 'r1_id', 
-            'preserveNullAndEmptyArrays': False
-        }
-    }, {
-        '$lookup': {
-            'from': 'courses', 
-            'localField': 'r1.courseID', 
-            'foreignField': 'courseID', 
-            'as': 'r2'
-        }
-    }, {
-        '$unwind': {
-            'path': '$r2', 
-            'preserveNullAndEmptyArrays': False
-        }
-    }, {
-        '$match': {
-            'user_id': user_id
-        }
-    }, {
-        '$sort': {
-            'courseID': 1
-        }
-    }
-]))
+    classes = course_list(user_id)
+#     {
+#         '$lookup': {
+#             'from': 'enrollment', 
+#             'localField': 'user_id', 
+#             'foreignField': 'user_id', 
+#             'as': 'r1'
+#         }
+#     }, {
+#         '$unwind': {
+#             'path': '$r1', 
+#             'includeArrayIndex': 'r1_id', 
+#             'preserveNullAndEmptyArrays': False
+#         }
+#     }, {
+#         '$lookup': {
+#             'from': 'courses', 
+#             'localField': 'r1.courseID', 
+#             'foreignField': 'courseID', 
+#             'as': 'r2'
+#         }
+#     }, {
+#         '$unwind': {
+#             'path': '$r2', 
+#             'preserveNullAndEmptyArrays': False
+#         }
+#     }, {
+#         '$match': {
+#             'user_id': user_id
+#         }
+#     }, {
+#         '$sort': {
+#             'courseID': 1
+#         }
+#     }
+# ]))
 
     # term = request.form.get('term')
 
